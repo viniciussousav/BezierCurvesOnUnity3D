@@ -20,7 +20,6 @@ public class Script : MonoBehaviour
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
         points.Add(new List<GameObject>());
         lines.Add(new List<LineRenderer>());
-     
     }
 
     // Update is called once per frame
@@ -35,7 +34,7 @@ public class Script : MonoBehaviour
             if(mousePoint.y < 275f)
             {
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
-                instantiated.GetComponent<SpriteRenderer>().color = colors[curvaAtual% colors.Count];
+                instantiated.GetComponent<SpriteRenderer>().color = Color.black;
                 points[curvaAtual].Add(instantiated);
                 LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
                 lines[curvaAtual].Add(newLine);
@@ -47,14 +46,16 @@ public class Script : MonoBehaviour
 
                     Vector3 startVec = points[curvaAtual][start].transform.position;
                     Vector3 targetVec = points[curvaAtual][target].transform.position;
-
                     Vector3[] vecs = { startVec, targetVec };
 
                     lines[curvaAtual][start].SetPositions(vecs);
-                  
+
+                    //teste
+                    lines[curvaAtual][start].material = new Material(Shader.Find("Sprites/Default"));
+                    lines[curvaAtual][start].startColor = colors[curvaAtual % colors.Count];
+                    lines[curvaAtual][start].endColor = colors[curvaAtual % colors.Count];
                 }
 
-                Debug.Log(points.Count);
             }
 
 
