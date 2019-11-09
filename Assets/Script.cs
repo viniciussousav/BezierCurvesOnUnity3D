@@ -10,6 +10,7 @@ public class Script : MonoBehaviour
     public GameObject prefab;
     public int quantCurvas = 0;
     public List<List<GameObject>> points = new List<List<GameObject>>();
+    public List<List<LineRenderer>> lines = new List<List<LineRenderer>>();
     private List<Color> colors = new List<Color> { Color.red, Color.blue, Color.green, Color.black, Color.yellow, Color.cyan };
     private int curvaAtual = 0;
     public Text curvaDisplay;
@@ -18,6 +19,7 @@ public class Script : MonoBehaviour
     {
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
         points.Add(new List<GameObject>());
+        lines.Add(new List<LineRenderer>());
      
     }
 
@@ -34,8 +36,24 @@ public class Script : MonoBehaviour
             {
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
                 instantiated.GetComponent<SpriteRenderer>().color = colors[curvaAtual% colors.Count];
-
                 points[curvaAtual].Add(instantiated);
+                LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
+                lines[curvaAtual].Add(newLine);
+                
+                if(points[curvaAtual].Count >= 2)
+                {
+                    int start = points[curvaAtual].Count - 2;
+                    int target = points[curvaAtual].Count - 1;
+
+                    Vector3 startVec = points[curvaAtual][start].transform.position;
+                    Vector3 targetVec = points[curvaAtual][target].transform.position;
+
+                    Vector3[] vecs = { startVec, targetVec };
+
+                    lines[curvaAtual][start].SetPositions(vecs);
+                  
+                }
+
                 Debug.Log(points.Count);
             }
 
@@ -46,6 +64,7 @@ public class Script : MonoBehaviour
     public void AdicionarCurva()
     {
         points.Add(new List<GameObject>());
+        lines.Add(new List<LineRenderer>());
         quantCurvas += 1;
         curvaAtual = quantCurvas;
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
