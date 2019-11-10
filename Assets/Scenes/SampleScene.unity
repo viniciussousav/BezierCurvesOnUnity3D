@@ -614,6 +614,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1920759504557493057, guid: 4619c6c0eb860564b9de9850268854cd, type: 3}
+  bezier_curve: {fileID: 1059673828247597041, guid: c767a6f5ade38c5489de1086da139202,
+    type: 3}
   curvaDisplay: {fileID: 985267538}
   selected: {fileID: 0}
   inputQuantAvaliacao: {fileID: 1942856346}
