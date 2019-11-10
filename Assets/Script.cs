@@ -9,19 +9,22 @@ public class Script : MonoBehaviour
     public GameObject prefab;
     public Text curvaDisplay;
     public Rigidbody2D selected;
+    public InputField inputQuantAvaliacao;
     
     public List<List<GameObject>> points = new List<List<GameObject>>();
     public List<List<LineRenderer>> lines = new List<List<LineRenderer>>();
     private List<Color> colors = new List<Color> { Color.red, Color.blue, Color.green, Color.black, Color.yellow, Color.cyan };
-    
+
+    public int qtdAvsCurva = 1;
     public int quantCurvas = 0;
     private int curvaAtual = 0;
-
     public bool arrastar;
     
     // Start is called before the first frame update
     void Start()
     {
+        inputQuantAvaliacao.text = (1).ToString();
+        qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
         points.Add(new List<GameObject>());
         lines.Add(new List<LineRenderer>());
@@ -125,6 +128,8 @@ public class Script : MonoBehaviour
                 } else {
                     lines[i][j].enabled = true;
                     points[i][j].SetActive(true);
+                    lines[i][j].startColor = colors[curvaAtual % colors.Count];
+                    lines[i][j].endColor = colors[curvaAtual % colors.Count];
                 }
             }
 
@@ -161,4 +166,45 @@ public class Script : MonoBehaviour
             }
         }
     }
+
+    public void atualizarQuantidadeAvaliação()
+    {
+        qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
+    }
+
+    public void removerCurva()
+    {
+        if(curvaAtual != 0)
+        {
+            for (int i = 0; i < points[curvaAtual].Count; i++)
+            {
+                Destroy(points[curvaAtual][i]);
+            }
+            points.RemoveAt(curvaAtual);
+            lines.RemoveAt(curvaAtual);
+            quantCurvas -= 1;
+            alterarCurvaAtual(-1);
+        }
+
+        else if(curvaAtual == 0)
+        {
+            for (int i = 0; i < points[curvaAtual].Count; i++)
+            {
+                Destroy(points[curvaAtual][i]);
+            }
+            points[0].Clear();
+            lines[0].Clear();
+        }
+
+    
+    }
+
+
+    public void criarCurva()
+    {
+
+    }
+
+    
+
 }
