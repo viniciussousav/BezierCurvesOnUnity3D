@@ -248,16 +248,32 @@ public class Script : MonoBehaviour
     public double comb(int n, int i)
     {
         double res = 1.0;
-        for (int j = n; j > i; j--)
+        if (i >= (n-i))
         {
-            res *= j;
+            for (int j = n; j > i; j--)
+            {
+                res *= j;
+            }
+            double fatnMenosi = 1.0;
+            for (int k = (n - i); k > 0; k--)
+            {
+                fatnMenosi *= k;
+            }
+            res = res / fatnMenosi;
         }
-        double fatnMenosi = 1.0;
-        for (int k = (n - i); k > 0; k--)
+        if ((n-i) > i)
         {
-            fatnMenosi *= k;
+            for (int j = n; j > (n-i); j--)
+            {
+                res *= j;
+            }
+            double fati = 1.0;
+            for (int k = i; k > 0; k--)
+            {
+                fati *= k;
+            }
+            res = res / fati;
         }
-        res = res / fatnMenosi;
         return res;
     }
     public void atualizarCurvaBezier()
