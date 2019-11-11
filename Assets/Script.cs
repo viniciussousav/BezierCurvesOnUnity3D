@@ -55,8 +55,9 @@ public class Script : MonoBehaviour
             Vector2 mousePoint = Input.mousePosition;
             Vector3 point = Camera.main.ScreenToWorldPoint(mousePoint);
             point.z = 0;
+            Vector2 mouseClick = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-            if (mousePoint.y < 275f)
+            if (mouseClick.y < 0.7f)
             {
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
                 instantiated.GetComponent<SpriteRenderer>().color = Color.black;
