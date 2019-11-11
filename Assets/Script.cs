@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Script : MonoBehaviour
 {
-    
+
     public GameObject prefab;                //modelo ponto
     public LineRenderer bezier_curve;        //modelo curva
     public Text curvaDisplay;                //UI "Curva atual"
@@ -14,33 +14,33 @@ public class Script : MonoBehaviour
     public InputField inputQuantAvaliacao;   //UI InputField
 
     public List<List<GameObject>> pontosDeAvaliacao = new List<List<GameObject>>();
-    public List<List<LineRenderer>> curva = new List<List<LineRenderer>>();    //List que guarda as curvas
+    public List<LineRenderer> curva = new List<LineRenderer>();    //List que guarda as curvas
     public List<List<GameObject>> points = new List<List<GameObject>>();       //List que guarda os pontos  
     public List<List<LineRenderer>> lines = new List<List<LineRenderer>>();    //List que guarda linhas que ligam os pontos 
     private List<Color> colors = new List<Color> { Color.red, Color.blue, Color.magenta, Color.green, Color.yellow, Color.cyan };
 
-    public int qtdAvsCurva = 12;
+    public int qtdAvsCurva = 100;
     public int quantCurvas = 0;
     private int curvaAtual = 0;
     public bool arrastar;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         //inicializando listas
         lines.Add(new List<LineRenderer>());
         points.Add(new List<GameObject>());
-        curva.Add(new List<LineRenderer>());
+        curva.Add(new LineRenderer());
         pontosDeAvaliacao.Add(new List<GameObject>());
 
         //interface
         inputQuantAvaliacao.text = (12).ToString();
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
-        
+
         //inicializando variaveis
         qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
         arrastar = false;
-        
+
         //curva teste
         //curves.Add(Instantiate(bezier_curve, new Vector3(0, 0, 0), Quaternion.identity));
         //Vector3[] test = { new Vector3(0f, 0f, 0f), new Vector3(2f, 2f, 2f)};
@@ -56,15 +56,15 @@ public class Script : MonoBehaviour
             Vector3 point = Camera.main.ScreenToWorldPoint(mousePoint);
             point.z = 0;
 
-            if(mousePoint.y < 275f)
+            if (mousePoint.y < 275f)
             {
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
                 instantiated.GetComponent<SpriteRenderer>().color = Color.black;
                 points[curvaAtual].Add(instantiated);
                 LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
                 lines[curvaAtual].Add(newLine);
-                
-                if(points[curvaAtual].Count >= 2)
+
+                if (points[curvaAtual].Count >= 2)
                 {
                     int start = points[curvaAtual].Count - 2;
                     int target = points[curvaAtual].Count - 1;
@@ -77,7 +77,7 @@ public class Script : MonoBehaviour
                     CriarCurva();
                 }
 
-                    
+
             }
         }
 
@@ -106,7 +106,7 @@ public class Script : MonoBehaviour
 
     public void AdicionarCurva()
     {
-        curva.Add(new List<LineRenderer>());
+        curva.Add(new LineRenderer());
         points.Add(new List<GameObject>());
         lines.Add(new List<LineRenderer>());
         quantCurvas += 1;
@@ -116,13 +116,13 @@ public class Script : MonoBehaviour
     }
     public void alterarCurvaAtual(int sentido)
     {
-        if(sentido == 1 && curvaAtual <= quantCurvas-1) //alterei (quantCurvas - 1)
+        if (sentido == 1 && curvaAtual <= quantCurvas - 1) //alterei (quantCurvas - 1)
         {
             curvaAtual += 1;
             curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
 
         }
-        else if(sentido == -1 && curvaAtual != 0)
+        else if (sentido == -1 && curvaAtual != 0)
         {
             curvaAtual -= 1;
             curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
@@ -136,11 +136,13 @@ public class Script : MonoBehaviour
         {
             for (int j = 0; j < lines[i].Count; j++)
             {
-                if(i != curvaAtual)
+                if (i != curvaAtual)
                 {
                     lines[i][j].enabled = false;
                     points[i][j].SetActive(false);
-                } else {
+                }
+                else
+                {
                     lines[i][j].enabled = true;
                     points[i][j].SetActive(true);
                     lines[i][j].startColor = colors[curvaAtual % colors.Count];
@@ -183,7 +185,7 @@ public class Script : MonoBehaviour
     }
     public void removerCurva()
     {
-        if(curvaAtual != 0)
+        if (curvaAtual != 0)
         {
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
@@ -195,7 +197,7 @@ public class Script : MonoBehaviour
             alterarCurvaAtual(-1);
         }
 
-        else if(curvaAtual == 0)
+        else if (curvaAtual == 0)
         {
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
@@ -205,7 +207,7 @@ public class Script : MonoBehaviour
             lines[0].Clear();
         }
 
-    
+
     }
     public void CriarCurva()
     {
@@ -213,42 +215,43 @@ public class Script : MonoBehaviour
         int indexPontoAnterior = 0;
         Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
         Vector2 pontoAtual = Vector2.zero;
-
-        for(int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
+        List<Vector3> vecs = new List<Vector3>();
+        for (int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
         {
-            pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false ;
+            pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
         }
 
         for (double t = particoes; t <= 1.0; t += particoes, indexPontoAnterior++)
         {
-            GameObject instantiated = Instantiate(prefab, pontoAnterior, Quaternion.identity) as GameObject;
-            instantiated.GetComponent<SpriteRenderer>().color = Color.black;
-            pontosDeAvaliacao[curvaAtual].Add(instantiated);
-            LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
-            curva[curvaAtual].Add(newLine);
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
                 float bern = (float)(comb(points[curvaAtual].Count - 1, i) * Math.Pow((1.0 - t), (points[curvaAtual].Count - 1 - i)) * Math.Pow(t, i));
                 pontoAtual.x += (bern * points[curvaAtual][i].transform.position.x);
                 pontoAtual.y += (bern * points[curvaAtual][i].transform.position.y);
             }
-            Vector3[] vecs = { pontoAnterior, pontoAtual };
+            vecs.Add(pontoAnterior);
+            vecs.Add(pontoAtual);
             //Debug.Log(vecs[0] + " " + vecs[1]);
-            curva[curvaAtual][indexPontoAnterior].material = new Material(Shader.Find("Sprites/Diffuse"));
-            curva[curvaAtual][indexPontoAnterior].SetPositions(vecs);
-            curva[curvaAtual][indexPontoAnterior].SetWidth(0.1f, 0.1f);
-            curva[curvaAtual][indexPontoAnterior].enabled = true;
-            curva[curvaAtual][indexPontoAnterior].startColor = Color.black;
-            curva[curvaAtual][indexPontoAnterior].endColor = Color.black;
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
-
+        GameObject instantiated = Instantiate(prefab, pontoAnterior, Quaternion.identity) as GameObject;
+        instantiated.GetComponent<SpriteRenderer>().color = Color.black;
+        pontosDeAvaliacao[curvaAtual].Add(instantiated);
+        LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
+        curva[curvaAtual] = newLine;
+        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Default"));
+        curva[curvaAtual].SetWidth(0.1f, 0.1f);
+        curva[curvaAtual].enabled = true;
+        curva[curvaAtual].startColor = Color.black;
+        curva[curvaAtual].endColor = Color.black;
+        curva[curvaAtual].positionCount = vecs.Count;
+        curva[curvaAtual].SetPositions(vecs.ToArray());
     }
     public double comb(int n, int i)
     {
         double res = 1.0;
-        if (i >= (n-i))
+        if (i >= (n - i))
         {
             for (int j = n; j > i; j--)
             {
@@ -261,9 +264,9 @@ public class Script : MonoBehaviour
             }
             res = res / fatnMenosi;
         }
-        if ((n-i) > i)
+        if ((n - i) > i)
         {
-            for (int j = n; j > (n-i); j--)
+            for (int j = n; j > (n - i); j--)
             {
                 res *= j;
             }
@@ -282,7 +285,12 @@ public class Script : MonoBehaviour
         int indexPontoAnterior = 0;
         Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
         Vector2 pontoAtual = Vector2.zero;
-
+        List<Vector3> vecs = new List<Vector3>();
+        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Diffuse"));
+        curva[curvaAtual].SetWidth(0.1f, 0.1f);
+        curva[curvaAtual].enabled = true;
+        curva[curvaAtual].startColor = Color.black;
+        curva[curvaAtual].endColor = Color.black;
         for (int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
         {
             pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
@@ -290,24 +298,21 @@ public class Script : MonoBehaviour
 
         for (double t = particoes; t <= 1.0; t += particoes, indexPontoAnterior++)
         {
-           
+
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
                 float bern = (float)(comb(points[curvaAtual].Count - 1, i) * Math.Pow((1.0 - t), (points[curvaAtual].Count - 1 - i)) * Math.Pow(t, i));
                 pontoAtual.x += (bern * points[curvaAtual][i].transform.position.x);
                 pontoAtual.y += (bern * points[curvaAtual][i].transform.position.y);
             }
-            Vector3[] vecs = { pontoAnterior, pontoAtual };
+            vecs.Add(pontoAnterior);
+            vecs.Add(pontoAtual);
             //Debug.Log(vecs[0] + " " + vecs[1]);
-            curva[curvaAtual][indexPontoAnterior].material = new Material(Shader.Find("Sprites/Diffuse"));
-            curva[curvaAtual][indexPontoAnterior].SetPositions(vecs);
-            curva[curvaAtual][indexPontoAnterior].SetWidth(0.1f, 0.1f);
-            curva[curvaAtual][indexPontoAnterior].enabled = true;
-            curva[curvaAtual][indexPontoAnterior].startColor = Color.black;
-            curva[curvaAtual][indexPontoAnterior].endColor = Color.black;
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
+        curva[curvaAtual].positionCount = vecs.Count;
+        curva[curvaAtual].SetPositions(vecs.ToArray());
     }
 
 }
