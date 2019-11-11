@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -183,7 +184,16 @@ public class Script : MonoBehaviour
     }
     public void atualizarQuantidadeAvaliação()
     {
-        qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
+        if (int.Parse(inputQuantAvaliacao.text) < 1)
+        {
+            EditorUtility.DisplayDialog("Valor inválido", "Não é possível escolher um valor abaixo de 1, favor verificar o número digitado!", "Entendi!");
+            inputQuantAvaliacao.text = (100).ToString();
+            qtdAvsCurva = 100;
+        }
+        else
+        {
+            qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
+        }
         if (points[curvaAtual].Count > 1)
         {
             atualizarCurvaBezier();
