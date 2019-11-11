@@ -252,8 +252,15 @@ public class Script : MonoBehaviour
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
+        vecs.Add(pontoAnterior);
+        Vector2 pontoFinal = new Vector2(points[curvaAtual][points[curvaAtual].Count - 1].transform.position.x, points[curvaAtual][points[curvaAtual].Count - 1].transform.position.y);
+        vecs.Add(pontoFinal);
         Destroy(curva[curvaAtual]);
-        GameObject instantiated = Instantiate(prefab, pontoAnterior, Quaternion.identity) as GameObject;
+        if(qtdAvsCurva == 100)
+        {
+            Debug.Log(vecs.Count);
+        }
+        GameObject instantiated = Instantiate(prefab, pontoFinal, Quaternion.identity) as GameObject;
         instantiated.GetComponent<SpriteRenderer>().color = colors[curvaAtual % colors.Count];
         pontosDeAvaliacao[curvaAtual].Add(instantiated);
         LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
@@ -321,6 +328,8 @@ public class Script : MonoBehaviour
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
+        vecs.Add(pontoAnterior);
+        vecs.Add(new Vector2(points[curvaAtual][points[curvaAtual].Count - 1].transform.position.x, points[curvaAtual][points[curvaAtual].Count - 1].transform.position.y));
         curva[curvaAtual].positionCount = vecs.Count;
         curva[curvaAtual].SetPositions(vecs.ToArray());
     }
