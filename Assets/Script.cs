@@ -209,12 +209,14 @@ public class Script : MonoBehaviour
             }
             points.RemoveAt(curvaAtual);
             lines.RemoveAt(curvaAtual);
+            Destroy(curva[curvaAtual]);
             quantCurvas -= 1;
             alterarCurvaAtual(-1);
         }
 
         else if (curvaAtual == 0)
         {
+            Destroy(curva[curvaAtual]);
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
                 Destroy(points[curvaAtual][i]);
@@ -257,7 +259,6 @@ public class Script : MonoBehaviour
         LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
         curva[curvaAtual] = newLine;
         curva[curvaAtual].material = new Material(Shader.Find("Sprites/Diffuse"));
-        curva[curvaAtual].SetWidth(0.1f, 0.1f);
         curva[curvaAtual].enabled = true;
         curva[curvaAtual].positionCount = vecs.Count;
         curva[curvaAtual].SetPositions(vecs.ToArray());
@@ -324,4 +325,64 @@ public class Script : MonoBehaviour
         curva[curvaAtual].SetPositions(vecs.ToArray());
     }
 
+    public void PlgsControleIsVisible (bool visibilidade)
+    {
+        if(visibilidade)
+        {
+            for(int i = 0; i < lines[curvaAtual].Count; i++)
+            {
+                lines[curvaAtual][i].enabled = true;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < lines[curvaAtual].Count; i++)
+            {
+                lines[curvaAtual][i].enabled = false;
+            }
+        }
+    }
+
+    public void CurvasIsVisible (bool visibilidade)
+    {
+        if (visibilidade)
+        {
+            for(int i=0;i<curva.Count;i++)
+            {
+                curva[i].enabled = true;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < curva.Count; i++)
+            {
+                curva[i].enabled = false;
+            }
+        }
+    }
+
+    public void CurvaAtualIsVisible ()
+    {
+        curva[curvaAtual].enabled = !curva[curvaAtual].enabled;
+    }
+
+    public void PtsControleIsVisible (bool visibilidade)
+    {
+        if(visibilidade)
+        {
+            for(int i=0;i<points[curvaAtual].Count;i++)
+            {
+                points[curvaAtual][i].SetActive(true);
+                points[curvaAtual][i].gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < points[curvaAtual].Count; i++)
+            {
+                points[curvaAtual][i].SetActive(false);
+                points[curvaAtual][i].gameObject.SetActive(false);
+            }
+        }
+    }
 }
