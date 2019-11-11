@@ -81,6 +81,11 @@ public class Script : MonoBehaviour
 
             }
         }
+        if (points[curvaAtual].Count > 1)
+        {
+            atualizarCurvaBezier();
+        }
+
 
         if (Input.GetMouseButtonDown(0) && arrastar)
         {
@@ -236,6 +241,7 @@ public class Script : MonoBehaviour
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
+        Destroy(curva[curvaAtual]);
         GameObject instantiated = Instantiate(prefab, pontoAnterior, Quaternion.identity) as GameObject;
         instantiated.GetComponent<SpriteRenderer>().color = Color.black;
         pontosDeAvaliacao[curvaAtual].Add(instantiated);
