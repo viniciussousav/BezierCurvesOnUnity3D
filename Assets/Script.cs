@@ -34,7 +34,7 @@ public class Script : MonoBehaviour
         pontosDeAvaliacao.Add(new List<GameObject>());
 
         //interface
-        inputQuantAvaliacao.text = (12).ToString();
+        inputQuantAvaliacao.text = (100).ToString();
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
 
         //inicializando variaveis
@@ -81,10 +81,6 @@ public class Script : MonoBehaviour
 
             }
         }
-        if (points[curvaAtual].Count > 1)
-        {
-            atualizarCurvaBezier();
-        }
 
 
         if (Input.GetMouseButtonDown(0) && arrastar)
@@ -115,6 +111,7 @@ public class Script : MonoBehaviour
         curva.Add(new LineRenderer());
         points.Add(new List<GameObject>());
         lines.Add(new List<LineRenderer>());
+        pontosDeAvaliacao.Add(new List<GameObject>());
         quantCurvas += 1;
         curvaAtual = quantCurvas;
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
@@ -133,7 +130,6 @@ public class Script : MonoBehaviour
             curvaAtual -= 1;
             curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
         }
-
         exibirLinhasAtuais();
     }
     public void exibirLinhasAtuais()
@@ -188,6 +184,10 @@ public class Script : MonoBehaviour
     public void atualizarQuantidadeAvaliação()
     {
         qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
+        if (points[curvaAtual].Count > 1)
+        {
+            atualizarCurvaBezier();
+        }
     }
     public void removerCurva()
     {
@@ -218,7 +218,6 @@ public class Script : MonoBehaviour
     public void CriarCurva()
     {
         double particoes = 1.0 / qtdAvsCurva;
-        int indexPontoAnterior = 0;
         Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
         Vector2 pontoAtual = Vector2.zero;
         List<Vector3> vecs = new List<Vector3>();
@@ -227,7 +226,7 @@ public class Script : MonoBehaviour
             pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
         }
 
-        for (double t = particoes; t <= 1.0; t += particoes, indexPontoAnterior++)
+        for (double t = particoes; t <= 1.0; t += particoes)
         {
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
@@ -243,15 +242,13 @@ public class Script : MonoBehaviour
         }
         Destroy(curva[curvaAtual]);
         GameObject instantiated = Instantiate(prefab, pontoAnterior, Quaternion.identity) as GameObject;
-        instantiated.GetComponent<SpriteRenderer>().color = Color.black;
+        instantiated.GetComponent<SpriteRenderer>().color = colors[curvaAtual % colors.Count];
         pontosDeAvaliacao[curvaAtual].Add(instantiated);
         LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
         curva[curvaAtual] = newLine;
-        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Default"));
+        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Diffuse"));
         curva[curvaAtual].SetWidth(0.1f, 0.1f);
         curva[curvaAtual].enabled = true;
-        curva[curvaAtual].startColor = Color.black;
-        curva[curvaAtual].endColor = Color.black;
         curva[curvaAtual].positionCount = vecs.Count;
         curva[curvaAtual].SetPositions(vecs.ToArray());
     }
@@ -293,11 +290,6 @@ public class Script : MonoBehaviour
         Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
         Vector2 pontoAtual = Vector2.zero;
         List<Vector3> vecs = new List<Vector3>();
-        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Diffuse"));
-        curva[curvaAtual].SetWidth(0.1f, 0.1f);
-        curva[curvaAtual].enabled = true;
-        curva[curvaAtual].startColor = Color.black;
-        curva[curvaAtual].endColor = Color.black;
         for (int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
         {
             pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
