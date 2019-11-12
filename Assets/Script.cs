@@ -377,20 +377,18 @@ public class Script : MonoBehaviour
 
     public void PtsControleIsVisible (bool visibilidade)
     {
-        if(visibilidade)
+        if (visibilidade)
         {
-            for(int i=0;i<points[curvaAtual].Count;i++)
+            for (int i = 0; i < points[curvaAtual].Count; i++)
             {
-                points[curvaAtual][i].SetActive(true);
-                points[curvaAtual][i].gameObject.SetActive(true);
+                points[curvaAtual][i].GetComponent<Renderer>().enabled = true;
             }
         }
         else
         {
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
-                points[curvaAtual][i].SetActive(false);
-                points[curvaAtual][i].gameObject.SetActive(false);
+                points[curvaAtual][i].GetComponent<Renderer>().enabled = false;
             }
         }
     }
