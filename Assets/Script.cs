@@ -423,7 +423,8 @@ public class Script : MonoBehaviour
 
     public void CurvaAtualIsVisible ()
     {
-        curva[curvaAtual].enabled = !curva[curvaAtual].enabled;
+        if(curva[curvaAtual] != null)
+            curva[curvaAtual].enabled = !curva[curvaAtual].enabled;
         visibCurvas[curvaAtual] = !visibCurvas[curvaAtual];
     }
 
