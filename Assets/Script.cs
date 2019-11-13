@@ -171,15 +171,18 @@ public class Script : MonoBehaviour
                 }
                 else
                 {
-                    if (visibPtsControle)
+                    if (visibPlgsControle)
                     {
                         lines[i][j].enabled = true;
+                        lines[i][j].startColor = colors[curvaAtual % colors.Count];
+                        lines[i][j].endColor = colors[curvaAtual % colors.Count];
+                        Debug.Log("Entrou");
                     }
-                    points[i][j].SetActive(true);
-                    lines[i][j].startColor = colors[curvaAtual % colors.Count];
-                    lines[i][j].endColor = colors[curvaAtual % colors.Count];
                     if (visibPtsControle)
+                    {
+                        points[i][j].SetActive(true);
                         points[i][j].GetComponent<Renderer>().enabled = true;
+                    }
                     else
                         points[i][j].GetComponent<Renderer>().enabled = false;
                 }
