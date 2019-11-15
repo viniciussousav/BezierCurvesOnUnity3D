@@ -119,7 +119,6 @@ public class Script : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                Debug.Log("Ponto apagado!");
                 bool encPonto = false;
                 for (int i = 0; i < points[curvaAtual].Count && !encPonto; i++)
                 {
@@ -146,11 +145,11 @@ public class Script : MonoBehaviour
                         //lines[curvaAtual][points[curvaAtual].Count - 2].enabled = false;
                         points[curvaAtual].RemoveAt(points[curvaAtual].Count - 1);
                         lines[curvaAtual].RemoveAt(lines[curvaAtual].Count - 1);
-                        if (points.Count > 1)
+                        if (points[curvaAtual].Count > 1)
                         {
                             atualizarLinhas();
                         }
-                        if(points.Count == 1)
+                        if (points[curvaAtual].Count == 1)
                         {
                             atualizarCurvaBezier();
                         }
