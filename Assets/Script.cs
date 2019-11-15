@@ -115,6 +115,50 @@ public class Script : MonoBehaviour
         {
             selected = null;
         }
+        if (selected != null)
+        {
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                Debug.Log("Ponto apagado!");
+                bool encPonto = false;
+                for (int i = 0; i < points[curvaAtual].Count && !encPonto; i++)
+                {
+                    if (selected.transform.position == points[curvaAtual][i].transform.position)
+                    {
+                        encPonto = true;
+                        points[curvaAtual][i].GetComponent<Renderer>().enabled = false;
+                        for (int j = i; j < points[curvaAtual].Count - 1; j++)
+                        {
+                            points[curvaAtual][j] = points[curvaAtual][j + 1];
+                            if(j == (points[curvaAtual].Count - 1))
+                            {
+                                points[curvaAtual][j].SetActive(false);
+                            }
+                        }
+                        if(i == (points[curvaAtual].Count - 1))
+                        {
+                            points[curvaAtual][i].SetActive(false);
+                        }
+                        if (points[curvaAtual].Count >= 2)
+                        {
+                            lines[curvaAtual][points[curvaAtual].Count-2].enabled = false;
+                        }
+                        //lines[curvaAtual][points[curvaAtual].Count - 2].enabled = false;
+                        points[curvaAtual].RemoveAt(points[curvaAtual].Count - 1);
+                        lines[curvaAtual].RemoveAt(lines[curvaAtual].Count - 1);
+                        if (points.Count > 1)
+                        {
+                            atualizarLinhas();
+                        }
+                        if(points.Count == 1)
+                        {
+                            atualizarCurvaBezier();
+                        }
+                        exibirLinhasAtuais();
+                    }
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -176,7 +220,6 @@ public class Script : MonoBehaviour
                         lines[i][j].enabled = true;
                         lines[i][j].startColor = colors[curvaAtual % colors.Count];
                         lines[i][j].endColor = colors[curvaAtual % colors.Count];
-                        Debug.Log("Entrou");
                     }
                     if (visibPtsControle)
                     {
@@ -214,8 +257,12 @@ public class Script : MonoBehaviour
                 Vector3[] array = { points[curvaAtual][i].transform.position, points[curvaAtual][i + 1].transform.position };
                 lines[curvaAtual][i].SetPositions(array);
             }
+            atualizarCurvaBezier();
         }
-        atualizarCurvaBezier();
+        if (points[curvaAtual].Count > 0 && lines[curvaAtual][lines[curvaAtual].Count - 1] != null)
+        {
+            lines[curvaAtual][lines[curvaAtual].Count - 1].enabled = false;
+        }
     }
     public void atualizarQuantidadeAvaliação()
     {
