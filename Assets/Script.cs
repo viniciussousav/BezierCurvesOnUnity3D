@@ -7,6 +7,26 @@ using UnityEngine.UI;
 
 public class Script : MonoBehaviour
 {
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
+    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
 
     public GameObject prefab;                //modelo ponto
     public LineRenderer bezier_curve;        //modelo curva
@@ -14,10 +34,9 @@ public class Script : MonoBehaviour
     public Rigidbody2D selected;             //Ponto arrastado
     public InputField inputQuantAvaliacao;   //UI InputField
 
-    public List<List<GameObject>> pontosDeAvaliacao = new List<List<GameObject>>();
     public List<LineRenderer> curva = new List<LineRenderer>();    //List que guarda as curvas
     public List<List<GameObject>> points = new List<List<GameObject>>();       //List que guarda os pontos  
-    public List<List<LineRenderer>> lines = new List<List<LineRenderer>>();    //List que guarda linhas que ligam os pontos 
+    public List<LineRenderer> lines = new List<LineRenderer>();    //List que guarda linhas que ligam os pontos 
     private List<Color> colors = new List<Color> { Color.red, Color.blue, Color.magenta, Color.green, Color.yellow, Color.cyan };
 
     public int qtdAvsCurva = 100;
@@ -35,10 +54,9 @@ public class Script : MonoBehaviour
     {
         //inicializando listas
         visibCurvas.Add(new bool());
-        lines.Add(new List<LineRenderer>());
+        lines.Add(new LineRenderer());
         points.Add(new List<GameObject>());
         curva.Add(new LineRenderer());
-        pontosDeAvaliacao.Add(new List<GameObject>());
 
         //interface
         inputQuantAvaliacao.text = (100).ToString();
@@ -48,11 +66,6 @@ public class Script : MonoBehaviour
         visibCurvas[curvaAtual] = true;
         qtdAvsCurva = int.Parse(inputQuantAvaliacao.text);
         arrastar = false;
-
-        //curva teste
-        //curves.Add(Instantiate(bezier_curve, new Vector3(0, 0, 0), Quaternion.identity));
-        //Vector3[] test = { new Vector3(0f, 0f, 0f), new Vector3(2f, 2f, 2f)};
-        //curves[0].SetPositions(test);
     }
 
     // Update is called once per frame
@@ -68,44 +81,29 @@ public class Script : MonoBehaviour
             if (mouseClick.y < 0.7f)
             {
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
-                instantiated.GetComponent<SpriteRenderer>().color = Color.black;
-                LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
-                lines[curvaAtual].Add(newLine);
-                if (visibPtsControle)
-                {
-                    instantiated.GetComponent<Renderer>().enabled = true;
-                }
-                else
-                {
-                    instantiated.GetComponent<Renderer>().enabled = false;
-                }
                 points[curvaAtual].Add(instantiated);
-
+                instantiated.GetComponent<Renderer>().enabled = visibPtsControle;
+                
+                if(points[curvaAtual].Count == 1)//mudei
+                {
+                    lines[curvaAtual] = Instantiate(bezier_curve, Vector3.zero, Quaternion.identity);
+                    lines[curvaAtual].startColor = colors[curvaAtual % colors.Count];
+                    lines[curvaAtual].endColor = colors[curvaAtual % colors.Count];
+                    lines[curvaAtual].SetPosition(0, points[curvaAtual][0].transform.position);
+                }
+             
                 if (points[curvaAtual].Count >= 2)
                 {
-                    int start = points[curvaAtual].Count - 2;
-                    int target = points[curvaAtual].Count - 1;
-                    Vector3[] vecs = { points[curvaAtual][start].transform.position, points[curvaAtual][target].transform.position };
-
-                    lines[curvaAtual][start].SetPositions(vecs);
-                    lines[curvaAtual][start].material = new Material(Shader.Find("Sprites/Default"));
-                    lines[curvaAtual][start].startColor = colors[curvaAtual % colors.Count];
-                    lines[curvaAtual][start].endColor = colors[curvaAtual % colors.Count];
-                    if(visibPlgsControle)
-                    {
-                        lines[curvaAtual][start].enabled = true;
-                    }
+                    lines[curvaAtual].positionCount = points[curvaAtual].Count;
+                    lines[curvaAtual].SetPosition(lines[curvaAtual].positionCount - 1, points[curvaAtual][points[curvaAtual].Count - 1].transform.position);
+                    
+                    if(curva[curvaAtual] == null)
+                        curva[curvaAtual] = Instantiate(bezier_curve, Vector3.zero, Quaternion.identity);
                     else
-                    {
-                        lines[curvaAtual][start].enabled = false;
-                    }
-                    CriarCurva();
+                        CriarCurva();
                 }
-
-
             }
         }
-
 
         if (Input.GetMouseButtonDown(0) && arrastar)
         {
@@ -122,38 +120,22 @@ public class Script : MonoBehaviour
                 bool encPonto = false;
                 for (int i = 0; i < points[curvaAtual].Count && !encPonto; i++)
                 {
-                    if (selected.transform.position == points[curvaAtual][i].transform.position)
+                    if(points[curvaAtual].Count == 1)
+                    {
+                        points[curvaAtual][i].SetActive(false);
+                        points[curvaAtual].Clear();
+                        selected = null;
+                    }
+                    else if (selected.transform.position == points[curvaAtual][i].transform.position)
                     {
                         encPonto = true;
-                        points[curvaAtual][i].GetComponent<Renderer>().enabled = false;
-                        for (int j = i; j < points[curvaAtual].Count - 1; j++)
-                        {
-                            points[curvaAtual][j] = points[curvaAtual][j + 1];
-                            if(j == (points[curvaAtual].Count - 1))
-                            {
-                                points[curvaAtual][j].SetActive(false);
-                            }
-                        }
-                        if(i == (points[curvaAtual].Count - 1))
-                        {
-                            points[curvaAtual][i].SetActive(false);
-                        }
-                        if (points[curvaAtual].Count >= 2)
-                        {
-                            lines[curvaAtual][points[curvaAtual].Count-2].enabled = false;
-                        }
-                        //lines[curvaAtual][points[curvaAtual].Count - 2].enabled = false;
-                        points[curvaAtual].RemoveAt(points[curvaAtual].Count - 1);
-                        lines[curvaAtual].RemoveAt(lines[curvaAtual].Count - 1);
-                        if (points[curvaAtual].Count > 1)
+                        points[curvaAtual][i].SetActive(false);
+                        points[curvaAtual].RemoveAt(i);
+                        if (points[curvaAtual].Count > 0)
                         {
                             atualizarLinhas();
-                        }
-                        if (points[curvaAtual].Count == 1)
-                        {
-                            atualizarCurvaBezier();
-                        }
-                        exibirLinhasAtuais();
+                        } 
+                        
                     }
                 }
             }
@@ -165,6 +147,7 @@ public class Script : MonoBehaviour
         if (selected)
         {
             atualizarLinhas();
+            CriarCurva();
         }
 
         if (Input.GetMouseButton(0) && selected != null)
@@ -177,14 +160,13 @@ public class Script : MonoBehaviour
     {
         curva.Add(new LineRenderer());
         points.Add(new List<GameObject>());
-        lines.Add(new List<LineRenderer>());
+        lines.Add(new LineRenderer());
         visibCurvas.Add(new bool());
-        pontosDeAvaliacao.Add(new List<GameObject>());
         quantCurvas += 1;
         curvaAtual = quantCurvas;
         curvaDisplay.text = "Curva atual: " + (curvaAtual + 1).ToString();
-        exibirLinhasAtuais();
         visibCurvas[curvaAtual] = visibGeralCurvas;
+        exibirLinhasAtuais();
     }
     public void alterarCurvaAtual(int sentido)
     {
@@ -205,32 +187,26 @@ public class Script : MonoBehaviour
     {
         for (int i = 0; i <= quantCurvas; i++)
         {
-            for (int j = 0; j < lines[i].Count; j++)
+            if(lines[i] != null)
             {
-                if (i != curvaAtual)
+                if(i == curvaAtual)
                 {
-                    lines[i][j].enabled = false;
-                    points[i][j].SetActive(false);
-                }
-                else
+                    lines[i].enabled = visibPlgsControle;
+                    for (int j = 0; j < points[i].Count; j++)
+                    {
+                        points[i][j].GetComponent<Renderer>().enabled = visibPtsControle;
+                    }
+                } else
                 {
-                    if (visibPlgsControle)
+                    lines[i].enabled = false;
+                    for(int j = 0; j < points[i].Count; j++)
                     {
-                        lines[i][j].enabled = true;
-                        lines[i][j].startColor = colors[curvaAtual % colors.Count];
-                        lines[i][j].endColor = colors[curvaAtual % colors.Count];
-                    }
-                    if (visibPtsControle)
-                    {
-                        points[i][j].SetActive(true);
-                        points[i][j].GetComponent<Renderer>().enabled = true;
-                    }
-                    else
                         points[i][j].GetComponent<Renderer>().enabled = false;
+                    }
                 }
             }
         }
-    }
+    } //refatorar
     public void arrastarControle()
     {
         arrastar = !arrastar;
@@ -249,18 +225,15 @@ public class Script : MonoBehaviour
     }
     public void atualizarLinhas()
     {
-        if (points[curvaAtual].Count >= 2)
+        if (points[curvaAtual].Count > 0)
         {
-            for (int i = 0; i < lines[curvaAtual].Count - 1; i++)
+            List<Vector3> list = new List<Vector3>();
+            for (int i = 0; i < points[curvaAtual].Count; i++)
             {
-                Vector3[] array = { points[curvaAtual][i].transform.position, points[curvaAtual][i + 1].transform.position };
-                lines[curvaAtual][i].SetPositions(array);
+                list.Add(points[curvaAtual][i].transform.position);
             }
-            atualizarCurvaBezier();
-        }
-        if (points[curvaAtual].Count > 0 && lines[curvaAtual][lines[curvaAtual].Count - 1] != null)
-        {
-            lines[curvaAtual][lines[curvaAtual].Count - 1].enabled = false;
+            lines[curvaAtual].positionCount = points[curvaAtual].Count;
+            lines[curvaAtual].SetPositions(list.ToArray());
         }
     }
     public void atualizarQuantidadeAvaliação()
@@ -277,7 +250,7 @@ public class Script : MonoBehaviour
         }
         if (points[curvaAtual].Count > 1)
         {
-            atualizarCurvaBezier();
+            CriarCurva();
         }
     }
     public void removerCurva()
@@ -288,9 +261,11 @@ public class Script : MonoBehaviour
             {
                 Destroy(points[curvaAtual][i]);
             }
+            points[curvaAtual].Clear();
+            Destroy(lines[curvaAtual]);
+            Destroy(curva[curvaAtual]);
             points.RemoveAt(curvaAtual);
             lines.RemoveAt(curvaAtual);
-            Destroy(curva[curvaAtual]);
             quantCurvas -= 1;
             alterarCurvaAtual(-1);
         }
@@ -301,9 +276,12 @@ public class Script : MonoBehaviour
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
                 Destroy(points[curvaAtual][i]);
+
             }
+            points[curvaAtual].Clear();
             points[0].Clear();
-            lines[0].Clear();
+            Destroy(lines[0]);
+            
         }
 
     }
@@ -313,10 +291,7 @@ public class Script : MonoBehaviour
         Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
         Vector2 pontoAtual = Vector2.zero;
         List<Vector3> vecs = new List<Vector3>();
-        for (int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
-        {
-            pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
-        }
+        vecs.Add(pontoAnterior);
 
         for (double t = particoes; t <= 1.0; t += particoes)
         {
@@ -326,33 +301,17 @@ public class Script : MonoBehaviour
                 pontoAtual.x += (bern * points[curvaAtual][i].transform.position.x);
                 pontoAtual.y += (bern * points[curvaAtual][i].transform.position.y);
             }
-            vecs.Add(pontoAnterior);
+            //vecs.Add(pontoAnterior);
             vecs.Add(pontoAtual);
-            //Debug.Log(vecs[0] + " " + vecs[1]);
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
         }
-        vecs.Add(pontoAnterior);
+        vecs.Add(pontoAnterior); //desnecessário
         Vector2 pontoFinal = new Vector2(points[curvaAtual][points[curvaAtual].Count - 1].transform.position.x, points[curvaAtual][points[curvaAtual].Count - 1].transform.position.y);
-        vecs.Add(pontoFinal);
-        Destroy(curva[curvaAtual]);
-        GameObject instantiated = Instantiate(prefab, pontoFinal, Quaternion.identity) as GameObject;
-        instantiated.GetComponent<SpriteRenderer>().color = colors[curvaAtual % colors.Count];
-        pontosDeAvaliacao[curvaAtual].Add(instantiated);
-        LineRenderer newLine = instantiated.GetComponent<LineRenderer>();
-        curva[curvaAtual] = newLine;
-        curva[curvaAtual].material = new Material(Shader.Find("Sprites/Diffuse"));
-        curva[curvaAtual].enabled = true;
+        vecs.Add(pontoFinal); //desnecessário
         curva[curvaAtual].positionCount = vecs.Count;
         curva[curvaAtual].SetPositions(vecs.ToArray());
-        if (visibCurvas[curvaAtual])
-        {
-            curva[curvaAtual].enabled = true;
-        }
-        else
-        {
-            curva[curvaAtual].enabled = false;
-        }
+        curva[curvaAtual].enabled = visibCurvas[curvaAtual];
     }
     public double comb(int n, int i)
     {
@@ -385,115 +344,37 @@ public class Script : MonoBehaviour
         }
         return res;
     }
-    public void atualizarCurvaBezier()
-    {
-        double particoes = 1.0 / qtdAvsCurva;
-        int indexPontoAnterior = 0;
-        Vector2 pontoAnterior = points[curvaAtual][0].transform.position;
-        Vector2 pontoAtual = Vector2.zero;
-        List<Vector3> vecs = new List<Vector3>();
-        for (int i = 0; i < pontosDeAvaliacao[curvaAtual].Count; i++)
-        {
-            pontosDeAvaliacao[curvaAtual][i].GetComponent<SpriteRenderer>().enabled = false;
-        }
-
-        for (double t = particoes; t <= 1.0; t += particoes, indexPontoAnterior++)
-        {
-
-            for (int i = 0; i < points[curvaAtual].Count; i++)
-            {
-                float bern = (float)(comb(points[curvaAtual].Count - 1, i) * Math.Pow((1.0 - t), (points[curvaAtual].Count - 1 - i)) * Math.Pow(t, i));
-                pontoAtual.x += (bern * points[curvaAtual][i].transform.position.x);
-                pontoAtual.y += (bern * points[curvaAtual][i].transform.position.y);
-            }
-            vecs.Add(pontoAnterior);
-            vecs.Add(pontoAtual);
-            //Debug.Log(vecs[0] + " " + vecs[1]);
-            pontoAnterior = pontoAtual;
-            pontoAtual = Vector2.zero;
-        }
-        vecs.Add(pontoAnterior);
-        vecs.Add(new Vector2(points[curvaAtual][points[curvaAtual].Count - 1].transform.position.x, points[curvaAtual][points[curvaAtual].Count - 1].transform.position.y));
-        curva[curvaAtual].positionCount = vecs.Count;
-        curva[curvaAtual].SetPositions(vecs.ToArray());
-        if (visibCurvas[curvaAtual])
-        {
-            curva[curvaAtual].enabled = true;
-        }
-        else
-        {
-            curva[curvaAtual].enabled = false;
-        }
-    }
-
+    
     public void PlgsControleIsVisible (bool visibilidade)
     {
-        if(visibilidade)
+        
+        for(int i = 0; i < lines.Count; i++)
         {
-            for(int i = 0; i < lines[curvaAtual].Count; i++)
-            {
-                lines[curvaAtual][i].enabled = true;
-            }
-            visibPlgsControle = true;
+            lines[curvaAtual].enabled = visibilidade;
         }
-        else
-        {
-            for (int i = 0; i < lines[curvaAtual].Count; i++)
-            {
-                lines[curvaAtual][i].enabled = false;
-            }
-            visibPlgsControle = false;
-        }
+        visibPlgsControle = visibilidade;
+        
+        
     }
 
     public void CurvasIsVisible (bool visibilidade)
     {
-        if (visibilidade)
+        for(int i=0;i<curva.Count;i++)
         {
-            for(int i=0;i<curva.Count;i++)
-            {
-                if (curva[i] != null)
-                    curva[i].enabled = true;
-                visibCurvas[i] = true;
-            }
-            visibGeralCurvas = true;
+            if (curva[i] != null)
+                curva[i].enabled = visibilidade;
+            visibCurvas[i] = visibilidade;
         }
-        else
-        {
-            for (int i = 0; i < curva.Count; i++)
-            {
-                if(curva[i] != null)
-                    curva[i].enabled = false;
-                visibCurvas[i] = false;
-            }
-            visibGeralCurvas = false;
-        }
+        visibGeralCurvas = visibilidade;
     }
 
-    public void CurvaAtualIsVisible ()
-    {
-        if(curva[curvaAtual] != null)
-            curva[curvaAtual].enabled = !curva[curvaAtual].enabled;
-        visibCurvas[curvaAtual] = !visibCurvas[curvaAtual];
-    }
 
     public void PtsControleIsVisible (bool visibilidade)
     {
-        if (visibilidade)
+        for (int i = 0; i < points[curvaAtual].Count; i++)
         {
-            for (int i = 0; i < points[curvaAtual].Count; i++)
-            {
-                points[curvaAtual][i].GetComponent<Renderer>().enabled = true;
-            }
-            visibPtsControle = true;
+            points[curvaAtual][i].GetComponent<Renderer>().enabled = visibilidade;
         }
-        else
-        {
-            for (int i = 0; i < points[curvaAtual].Count; i++)
-            {
-                points[curvaAtual][i].GetComponent<Renderer>().enabled = false;
-            }
-            visibPtsControle = false;
-        }
+        visibPtsControle = visibilidade;
     }
 }
