@@ -52,6 +52,13 @@ public class Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
+        
+          Vector3[] aux = new Vector3[points[curvaAtual].Count];
+                    for (int i = 0; i < points[curvaAtual].Count; i++)
+                        aux[i] = points[curvaAtual][i].transform.position;
+        */
+
         //inicializando listas
         visibCurvas.Add(new bool());
         lines.Add(new LineRenderer());
@@ -95,6 +102,7 @@ public class Script : MonoBehaviour
              
                 if (points[curvaAtual].Count >= 2)
                 {
+                    
                     lines[curvaAtual].positionCount = points[curvaAtual].Count;
                     lines[curvaAtual].SetPosition(lines[curvaAtual].positionCount - 1, points[curvaAtual][points[curvaAtual].Count - 1].transform.position);
                     
@@ -102,6 +110,8 @@ public class Script : MonoBehaviour
                         curva[curvaAtual] = Instantiate(bezier_curve, Vector3.zero, Quaternion.identity);
                     else
                         CriarCurva();
+
+                    Debug.Log(lines[curvaAtual].positionCount);
                 }
             }
         }
