@@ -255,35 +255,13 @@ public class Script : MonoBehaviour
     }
     public void removerCurva()
     {
-        if (curvaAtual != 0)
+        for (int i = 0; i < points[curvaAtual].Count; i++)
         {
-            for (int i = 0; i < points[curvaAtual].Count; i++)
-            {
-                Destroy(points[curvaAtual][i]);
-            }
-            points[curvaAtual].Clear();
-            Destroy(lines[curvaAtual]);
-            Destroy(curva[curvaAtual]);
-            points.RemoveAt(curvaAtual);
-            lines.RemoveAt(curvaAtual);
-            quantCurvas -= 1;
-            alterarCurvaAtual(-1);
+            Destroy(points[curvaAtual][i]);
         }
-
-        else if (curvaAtual == 0)
-        {
-            Destroy(curva[curvaAtual]);
-            for (int i = 0; i < points[curvaAtual].Count; i++)
-            {
-                Destroy(points[curvaAtual][i]);
-
-            }
-            points[curvaAtual].Clear();
-            points[0].Clear();
-            Destroy(lines[0]);
-            
-        }
-
+        Destroy(curva[curvaAtual]);
+        Destroy(lines[curvaAtual]);
+        points[curvaAtual].Clear();
     }
     public void CriarCurva()
     {
