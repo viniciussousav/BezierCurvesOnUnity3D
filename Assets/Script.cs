@@ -90,6 +90,7 @@ public class Script : MonoBehaviour
                     lines[curvaAtual].startColor = colors[curvaAtual % colors.Count];
                     lines[curvaAtual].endColor = colors[curvaAtual % colors.Count];
                     lines[curvaAtual].SetPosition(0, points[curvaAtual][0].transform.position);
+                    lines[curvaAtual].enabled = visibPlgsControle;
                 }
              
                 if (points[curvaAtual].Count >= 2)
@@ -325,11 +326,8 @@ public class Script : MonoBehaviour
     
     public void PlgsControleIsVisible (bool visibilidade)
     {
-        
-        for(int i = 0; i < lines.Count; i++)
-        {
+        if(lines[curvaAtual] != null)
             lines[curvaAtual].enabled = visibilidade;
-        }
         visibPlgsControle = visibilidade;
         
         
