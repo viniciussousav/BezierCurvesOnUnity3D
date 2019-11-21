@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -287,10 +286,16 @@ public class Script : MonoBehaviour
             for (int i = 0; i < points[curvaAtual].Count; i++)
             {
                 float bern = (float)(comb(points[curvaAtual].Count - 1, i) * Math.Pow((1.0 - t), (points[curvaAtual].Count - 1 - i)) * Math.Pow(t, i));
+                if(bern > 9999999)
+                {
+                    Debug.Log("Comb: "+comb(points[curvaAtual].Count - 1, i)+"points = "+points[curvaAtual].Count + "i = "+i);
+
+                }
                 pontoAtual.x += (bern * points[curvaAtual][i].transform.position.x);
                 pontoAtual.y += (bern * points[curvaAtual][i].transform.position.y);
             }
             //vecs.Add(pontoAnterior);
+            Debug.Log(pontoAtual);
             vecs.Add(pontoAtual);
             pontoAnterior = pontoAtual;
             pontoAtual = Vector2.zero;
@@ -304,34 +309,34 @@ public class Script : MonoBehaviour
     }
     public double comb(int n, int i)
     {
-        double res = 1.0;
+        System.Numerics.BigInteger res = new System.Numerics.BigInteger(1.0);
         if (i >= (n - i))
         {
             for (int j = n; j > i; j--)
             {
-                res *= j;
+                res = System.Numerics.BigInteger.Multiply(res, j);
             }
-            double fatnMenosi = 1.0;
+            System.Numerics.BigInteger fatnMenosi = new System.Numerics.BigInteger(1.0);
             for (int k = (n - i); k > 0; k--)
             {
-                fatnMenosi *= k;
+                fatnMenosi = System.Numerics.BigInteger.Multiply(fatnMenosi,k);
             }
-            res = res / fatnMenosi;
+            res = System.Numerics.BigInteger.Divide(res, fatnMenosi);
         }
         if ((n - i) > i)
         {
             for (int j = n; j > (n - i); j--)
             {
-                res *= j;
+                res = System.Numerics.BigInteger.Multiply(res, j);
             }
-            double fati = 1.0;
+            System.Numerics.BigInteger fati = new System.Numerics.BigInteger(1.0);
             for (int k = i; k > 0; k--)
             {
-                fati *= k;
+                fati = System.Numerics.BigInteger.Multiply(fati, k);
             }
-            res = res / fati;
+            res = System.Numerics.BigInteger.Divide(res, fati);
         }
-        return res;
+        return (double)res;
     }
     
     public void PlgsControleIsVisible (bool visibilidade)
