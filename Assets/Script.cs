@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,27 +6,6 @@ using UnityEngine.UI;
 
 public class Script : MonoBehaviour
 {
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-
     public GameObject prefab;                //modelo ponto
     public LineRenderer bezier_curve;        //modelo curva
     public Text curvaDisplay;                //UI "Curva atual"
@@ -111,7 +89,7 @@ public class Script : MonoBehaviour
                     else
                         CriarCurva();
 
-                    Debug.Log(lines[curvaAtual].positionCount);
+                    //Debug.Log(lines[curvaAtual].positionCount);
                 }
             }
         }
@@ -251,7 +229,7 @@ public class Script : MonoBehaviour
     {
         if (int.Parse(inputQuantAvaliacao.text) < 1)
         {
-            EditorUtility.DisplayDialog("Valor inválido", "Não é possível escolher um valor abaixo de 1, favor verificar o número digitado!", "Entendi!");
+            //EditorUtility.DisplayDialog("Valor inválido", "Não é possível escolher um valor abaixo de 1, favor verificar o número digitado!", "Entendi!");
             inputQuantAvaliacao.text = (100).ToString();
             qtdAvsCurva = 100;
         }
