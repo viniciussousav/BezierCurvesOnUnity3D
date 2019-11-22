@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,27 +6,6 @@ using UnityEngine.UI;
 
 public class Script : MonoBehaviour
 {
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-    //SE ISSO AQUI ESTIVER SUMINDO VC DESFEZ TUDO
-
     public GameObject prefab;                //modelo ponto
     public LineRenderer bezier_curve;        //modelo curva
     public Text curvaDisplay;                //UI "Curva atual"
@@ -90,8 +68,8 @@ public class Script : MonoBehaviour
                 GameObject instantiated = Instantiate(prefab, point, Quaternion.identity) as GameObject;
                 points[curvaAtual].Add(instantiated);
                 instantiated.GetComponent<Renderer>().enabled = visibPtsControle;
-                
-                if(points[curvaAtual].Count == 1)//mudei
+
+                if (points[curvaAtual].Count == 1)//mudei
                 {
                     lines[curvaAtual] = Instantiate(bezier_curve, Vector3.zero, Quaternion.identity);
                     lines[curvaAtual].startColor = colors[curvaAtual % colors.Count];
@@ -99,19 +77,19 @@ public class Script : MonoBehaviour
                     lines[curvaAtual].SetPosition(0, points[curvaAtual][0].transform.position);
                     lines[curvaAtual].enabled = visibPlgsControle;
                 }
-             
+
                 if (points[curvaAtual].Count >= 2)
                 {
-                    
+
                     lines[curvaAtual].positionCount = points[curvaAtual].Count;
                     lines[curvaAtual].SetPosition(lines[curvaAtual].positionCount - 1, points[curvaAtual][points[curvaAtual].Count - 1].transform.position);
-                    
-                    if(curva[curvaAtual] == null)
+
+                    if (curva[curvaAtual] == null)
                         curva[curvaAtual] = Instantiate(bezier_curve, Vector3.zero, Quaternion.identity);
                     else
                         CriarCurva();
 
-                    Debug.Log(lines[curvaAtual].positionCount);
+                    //Debug.Log(lines[curvaAtual].positionCount);
                 }
             }
         }
@@ -131,7 +109,7 @@ public class Script : MonoBehaviour
                 bool encPonto = false;
                 for (int i = 0; i < points[curvaAtual].Count && !encPonto; i++)
                 {
-                    if(points[curvaAtual].Count == 1)
+                    if (points[curvaAtual].Count == 1)
                     {
                         points[curvaAtual][i].SetActive(false);
                         points[curvaAtual].Clear();
@@ -145,8 +123,8 @@ public class Script : MonoBehaviour
                         if (points[curvaAtual].Count > 0)
                         {
                             atualizarLinhas();
-                        } 
-                        
+                        }
+
                     }
                 }
             }
@@ -198,19 +176,20 @@ public class Script : MonoBehaviour
     {
         for (int i = 0; i <= quantCurvas; i++)
         {
-            if(lines[i] != null)
+            if (lines[i] != null)
             {
-                if(i == curvaAtual)
+                if (i == curvaAtual)
                 {
                     lines[i].enabled = visibPlgsControle;
                     for (int j = 0; j < points[i].Count; j++)
                     {
                         points[i][j].GetComponent<Renderer>().enabled = visibPtsControle;
                     }
-                } else
+                }
+                else
                 {
                     lines[i].enabled = false;
-                    for(int j = 0; j < points[i].Count; j++)
+                    for (int j = 0; j < points[i].Count; j++)
                     {
                         points[i][j].GetComponent<Renderer>().enabled = false;
                     }
@@ -251,7 +230,7 @@ public class Script : MonoBehaviour
     {
         if (int.Parse(inputQuantAvaliacao.text) < 1)
         {
-            EditorUtility.DisplayDialog("Valor inválido", "Não é possível escolher um valor abaixo de 1, favor verificar o número digitado!", "Entendi!");
+            //EditorUtility.DisplayDialog("Valor inválido", "Não é possível escolher um valor abaixo de 1, favor verificar o número digitado!", "Entendi!");
             inputQuantAvaliacao.text = (100).ToString();
             qtdAvsCurva = 100;
         }
@@ -333,19 +312,19 @@ public class Script : MonoBehaviour
         }
         return res;
     }
-    
-    public void PlgsControleIsVisible (bool visibilidade)
+
+    public void PlgsControleIsVisible(bool visibilidade)
     {
-        if(lines[curvaAtual] != null)
+        if (lines[curvaAtual] != null)
             lines[curvaAtual].enabled = visibilidade;
         visibPlgsControle = visibilidade;
-        
-        
+
+
     }
 
-    public void CurvasIsVisible (bool visibilidade)
+    public void CurvasIsVisible(bool visibilidade)
     {
-        for(int i=0;i<curva.Count;i++)
+        for (int i = 0; i < curva.Count; i++)
         {
             if (curva[i] != null)
                 curva[i].enabled = visibilidade;
@@ -355,7 +334,7 @@ public class Script : MonoBehaviour
     }
 
 
-    public void PtsControleIsVisible (bool visibilidade)
+    public void PtsControleIsVisible(bool visibilidade)
     {
         for (int i = 0; i < points[curvaAtual].Count; i++)
         {
